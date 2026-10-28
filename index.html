@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Charlie Kirk Research — UVU Security + Connection Web</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light dark;
+    --bg:#f4f1ea;
+    --bg-panel:#fbf9f4;
+    --bg-canvas:#efe9dc;
+    --ink:#23201a;
+    --ink-soft:#5c564a;
+    --ink-faint:#8a8375;
+    --line:#d8d0bf;
+    --line-strong:#b9ae94;
+    --accent:#a3271e;
+    --accent-soft:rgba(163,39,30,.10);
+    --people:#b97f16;
+    --people-bg:#f3e3bd;
+    --security:#c0392b;
+    --security-bg:#f8d7d4;
+    --org:#1e7a5f;
+    --org-bg:#cfe8dc;
+    --gov:#2f5d8a;
+    --gov-bg:#d3e2ef;
+    --place:#a3502a;
+    --place-bg:#f0d9c8;
+    --edge:#a99e83;
+    --edge-hi:#a3271e;
+    --shadow:0 10px 30px rgba(50,40,20,.14);
+    --chip-bg:#fffdf8;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#17150f;
+      --bg-panel:#201d15;
+      --bg-canvas:#1b1912;
+      --ink:#ece5d3;
+      --ink-soft:#b3a98f;
+      --ink-faint:#7e7663;
+      --line:#3a3527;
+      --line-strong:#57503c;
+      --accent:#e0685c;
+      --accent-soft:rgba(224,104,92,.14);
+      --people:#d9a742;
+      --people-bg:#3d3016;
+      --security:#e74c3c;
+      --security-bg:#4a1e1a;
+      --org:#4cb894;
+      --org-bg:#173a2e;
+      --gov:#6ea3d4;
+      --gov-bg:#1d3247;
+      --place:#d98a5c;
+      --place-bg:#40271a;
+      --edge:#5d5643;
+      --edge-hi:#e0685c;
+      --shadow:0 10px 30px rgba(0,0,0,.5);
+      --chip-bg:#262219;
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:"IBM Plex Sans",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1440px;margin:0 auto;padding:20px 18px 40px}
+  header.top{padding:6px 2px 16px;border-bottom:2px solid var(--ink);margin-bottom:16px}
+  .kicker{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:600}
+  h1{font-family:"IBM Plex Serif",serif;font-size:clamp(26px,4.4vw,42px);font-weight:700;line-height:1.12;margin:6px 0 8px}
+  .lede{color:var(--ink-soft);font-size:15px;max-width:72ch}
+  .lede strong{color:var(--ink)}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+  .searchbox{position:relative;flex:1 1 240px;max-width:380px}
+  .searchbox input{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--line-strong);border-radius:6px;background:var(--bg-panel);color:var(--ink);font:inherit;font-size:14px}
+  .searchbox input:focus{outline:2px solid var(--accent);outline-offset:1px}
+  .searchbox svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--ink-faint);fill:none;stroke-width:2}
+  .search-results{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--bg-panel);border:1px solid var(--line-strong);border-radius:6px;box-shadow:var(--shadow);z-index:40;overflow:hidden;display:none}
+  .search-results.open{display:block}
+  .search-results button{display:flex;width:100%;text-align:left;gap:8px;align-items:center;padding:9px 12px;background:none;border:none;border-bottom:1px solid var(--line);font:inherit;font-size:14px;color:var(--ink);cursor:pointer}
+  .search-results button:last-child{border-bottom:none}
+  .search-results button:hover{background:var(--accent-soft)}
+  .dot{width:10px;height:10px;border-radius:50%;flex:none;display:inline-block}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:500;padding:7px 11px;border-radius:999px;border:1px solid var(--line-strong);background:var(--chip-bg);color:var(--ink-soft);cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+  .chip[aria-pressed="true"]{color:var(--ink);border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+  .zoomctl{display:flex;gap:6px;margin-left:auto}
+  .zbtn{width:38px;height:38px;border-radius:6px;border:1px solid var(--line-strong);background:var(--chip-bg);color:var(--ink);font-size:18px;cursor:pointer;display:grid;place-items:center;font-family:"IBM Plex Mono",monospace}
+  .zbtn.wide{width:auto;padding:0 12px;font-size:12px;letter-spacing:.06em}
+  .zbtn:hover{border-color:var(--ink)}
+  .stage{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}
+  .board{position:relative;background:var(--bg-canvas);border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;box-shadow:var(--shadow);background-image:radial-gradient(var(--line) 1px, transparent 1px);background-size:26px 26px}
+  svg#web{display:block;width:100%;height:min(72vh,760px);min-height:440px;touch-action:none;cursor:grab}
+  svg#web.panning{cursor:grabbing}
+  svg#web text{user-select:none;pointer-events:none}
+  .hint{position:absolute;left:12px;bottom:12px;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-faint);background:var(--bg-panel);border:1px solid var(--line);border-radius:5px;padding:5px 9px;pointer-events:none;max-width:calc(100% - 24px)}
+  .count-badge{position:absolute;right:12px;top:12px;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-soft);background:var(--bg-panel);border:1px solid var(--line);border-radius:5px;padding:5px 9px;pointer-events:none}
+  .edge{stroke:var(--edge);stroke-width:1.4;fill:none;transition:opacity .25s, stroke .25s}
+  .edge.hl{stroke:var(--edge-hi);stroke-width:2.6}
+  .edge.dim{opacity:.10}
+  .edge-label{font-family:"IBM Plex Mono",monospace;font-size:10.5px;fill:var(--accent);paint-order:stroke;stroke:var(--bg-canvas);stroke-width:4px;stroke-linejoin:round}
+  .node{cursor:pointer}
+  .node circle.core{stroke-width:2.5;transition:opacity .25s}
+  .node.dim circle.core,.node.dim text,.node.dim image{opacity:.16}
+  .node.filtered-out{display:none}
+  .node text{font-family:"IBM Plex Sans",sans-serif;font-weight:600;fill:var(--ink);text-anchor:middle;paint-order:stroke;stroke:var(--bg-canvas);stroke-width:4px;stroke-linejoin:round}
+  .node.selected circle.core{stroke:var(--accent);stroke-width:4}
+  .node.cat-people circle.core{fill:var(--people-bg);stroke:var(--people)}
+  .node.cat-security circle.core{fill:var(--security-bg);stroke:var(--security)}
+  .node.cat-org circle.core{fill:var(--org-bg);stroke:var(--org)}
+  .node.cat-gov circle.core{fill:var(--gov-bg);stroke:var(--gov)}
+  .node.cat-place circle.core{fill:var(--place-bg);stroke:var(--place)}
+  .node .initials{font-family:"IBM Plex Mono",monospace;font-weight:600;fill:var(--ink)}
+  .node image{pointer-events:none}
+  .panel{background:var(--bg-panel);border:1px solid var(--line-strong);border-radius:8px;box-shadow:var(--shadow);padding:20px;position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}
+  .panel .ptag{display:inline-flex;align-items:center;gap:7px;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:999px;border:1px solid var(--line-strong)}
+  .panel h2{font-family:"IBM Plex Serif",serif;font-size:24px;line-height:1.2;margin:12px 0 4px}
+  .status-line{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft);margin-bottom:12px}
+  .panel .role{font-size:14.5px;color:var(--ink);border-top:1px solid var(--line);padding-top:12px}
+  .panel h3{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin:18px 0 8px}
+  .conn-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+  .conn-list button{width:100%;text-align:left;background:none;border:1px solid var(--line);border-radius:6px;padding:9px 11px;font:inherit;cursor:pointer;color:var(--ink);display:flex;gap:9px;align-items:flex-start}
+  .conn-list button:hover{border-color:var(--accent);background:var(--accent-soft)}
+  .conn-list .cname{font-weight:600;font-size:14px}
+  .conn-list .clabel{display:block;font-size:12.5px;color:var(--ink-soft);font-weight:400;margin-top:1px}
+  .hub-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+  .hub-list button{width:100%;text-align:left;background:none;border:1px solid var(--line);border-radius:6px;padding:9px 11px;font:inherit;cursor:pointer;color:var(--ink);display:flex;gap:9px;align-items:center;justify-content:space-between}
+  .hub-list button:hover{border-color:var(--accent);background:var(--accent-soft)}
+  .clear-btn{margin-top:16px;font-family:"IBM Plex Mono",monospace;font-size:12px;padding:8px 12px;border-radius:6px;border:1px solid var(--line-strong);background:none;color:var(--ink-soft);cursor:pointer}
+  .clear-btn:hover{color:var(--ink);border-color:var(--ink)}
+  .legend{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:16px;padding:12px 4px 0;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-soft);font-family:"IBM Plex Mono",monospace}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  footer{margin-top:14px;font-size:12.5px;color:var(--ink-faint)}
+  @media (max-width:920px){
+    .stage{grid-template-columns:1fr}
+    .panel{position:static;max-height:none}
+    svg#web{height:58vh;min-height:380px}
+    .zoomctl{margin-left:0}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="kicker">UVU Case Files · Security Detail + Research Web</div>
+    <h1>Charlie Kirk Research — UVU Security + Connections</h1>
+    <p class="lede">Interactive map of the <strong>private security team on the ground at UVU on September 10, 2025</strong> (Integrity Security Solutions + TPUSA in-house) plus the broader Utah research connections (47G, Convergence Point, Merrells, UVU leadership, Skinwalker, etc.). Drag, zoom, tap nodes for details.</p>
+  </header>
+  <div class="controls">
+    <div class="searchbox">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="search" type="search" placeholder="Find a person, company…" aria-label="Search" autocomplete="off">
+      <div class="search-results" id="searchResults"></div>
+    </div>
+    <div class="chips" role="group">
+      <button class="chip" data-cat="security" aria-pressed="true"><span class="dot" style="background:var(--security)"></span>Security Team</button>
+      <button class="chip" data-cat="people" aria-pressed="true"><span class="dot" style="background:var(--people)"></span>People</button>
+      <button class="chip" data-cat="org" aria-pressed="true"><span class="dot" style="background:var(--org)"></span>Orgs</button>
+      <button class="chip" data-cat="gov" aria-pressed="true"><span class="dot" style="background:var(--gov)"></span>Gov</button>
+      <button class="chip" data-cat="place" aria-pressed="true"><span class="dot" style="background:var(--place)"></span>Places</button>
+    </div>
+    <div class="zoomctl">
+      <button class="zbtn" id="zoomOut">−</button>
+      <button class="zbtn" id="zoomIn">+</button>
+      <button class="zbtn wide" id="zoomFit">FIT</button>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="board">
+      <svg id="web" role="img" aria-label="Interactive connection web"></svg>
+      <div class="count-badge" id="countBadge"></div>
+      <div class="hint">Drag to pan · Pinch/scroll zoom · Drag nodes · Tap for details</div>
+    </div>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </div>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--security)"></span>UVU Security Team (Sept 10)</span>
+    <span><span class="dot" style="background:var(--people)"></span>Person</span>
+    <span><span class="dot" style="background:var(--org)"></span>Organization</span>
+    <span><span class="dot" style="background:var(--gov)"></span>Government</span>
+    <span><span class="dot" style="background:var(--place)"></span>Place / Project</span>
+  </div>
+  <footer>
+    <p>Security team names drawn from Brian Harpole’s Shawn Ryan Show interview, Deseret News / Salt Lake Tribune reporting, and public accounts of the immediate response. Full operator roster (~13) is not publicly named beyond the core leads. Connection web based on the researcher’s Timeline document. A line means a documented relationship, not wrongdoing.</p>
+  </footer>
+</div>
+<script>
+(function(){
+  "use strict";
+  var NODES = [
+    // Security Team (core named on ground)
+    {id:"harpole", name:"Brian Harpole", cat:"security", status:"Living",
+     role:"Founder of Integrity Security Solutions (Rockhouse Integrity Group). Lead of the contracted private detail at UVU Sept 10, 2025. Former Dallas-Fort Worth police officer (~14 years). Applied immediate pressure to Kirk’s wound and helped move him to the vehicle.",
+     image:"https://i.ytimg.com/vi/S0fmq1zffGw/maxresdefault.jpg"},
+    {id:"flood", name:"Dan Flood", cat:"security", status:"Living",
+     role:"TPUSA in-house Head of Risk Strategy / security (distinct from contracted Integrity team). Former U.S. Marine (1997–2003). Close friend of Harpole; came up through prior contractor Shaffer Security Group. Present on stage; helped move Kirk.",
+     image:"https://web.archive.org/web/20250721173819im_/https://backend.tpusa.com/wp-content/uploads/2023/01/Dan-copy-200x200.jpg"},
+    {id:"davis", name:"Justin Davis", cat:"security", status:"Living",
+     role:"Detail member and emergency driver on Sept 10. Drove the vehicle from the courtyard to Timpanogos Regional Hospital while Harpole performed first aid.",
+     image:null},
+    {id:"cutler", name:"Rick Cutler", cat:"security", status:"Living",
+     role:"Private security operator on the Integrity detail. In the rear of the vehicle holding Harpole while first aid was administered.",
+     image:null},
+    {id:"turek", name:"Frank Turek", cat:"security", status:"Living",
+     role:"Christian author, apologist, and close friend/mentor to Kirk (not formal security). Rode in the vehicle and prayed en route to the hospital. Publicly addressed conspiracy claims about the white hat.",
+     image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Frank_Turek_2025.jpg/500px-Frank_Turek_2025.jpg"},
+    {id:"integrity", name:"Integrity Security Solutions", cat:"security", status:"Firm",
+     role:"Contracted firm (dba Rockhouse Integrity Group) founded 2023 by Brian Harpole. Provided the ~12–13 private operators on the ground at UVU (close-protection bubble). TPUSA reported 8; Harpole stated 13 present.",
+     image:null},
+
+    // Broader research connections (from provided map)
+    {id:"fugal", name:"Brandon Fugal", cat:"people", status:"Living",
+     role:"Commercial real estate broker/investor (Colliers Utah chairman) steering state innovation districts (Convergence Point); board member at 47G; former 10-year UVU Foundation board member and $5M donor; owns Skinwalker Ranch via Adamantium Real Estate LLC."},
+    {id:"danmerrell", name:"Dan Merrell", cat:"people", status:"Living",
+     role:"Owner of Hardscape Utah; primary contractor hired under emergency DFCM order for post-event excavation/paving at the UVU courtyard (Sept 14–15, 2025)."},
+    {id:"kenmerrell", name:"Ken Merrell", cat:"people", status:"Living",
+     role:"CCI Inc. / Cenex heavy materials transport carrier, co-located with Hardscape Utah; client/partner of DoD-cleared Semper Environmental."},
+    {id:"moss", name:"Jefferson Moss", cat:"people", status:"Living",
+     role:"CEO of the state-funded Nucleus Institute and GOEO Commissioner; former House Majority Leader managing the $50M Convergence Point budget."},
+    {id:"peterson", name:"Val Peterson", cat:"people", status:"Living",
+     role:"UVU Vice President of Administration & Strategic Relations; Utah State Representative; co-launched the Utah Aerospace & Defense Caucus with Sen. Ann Millner."},
+    {id:"cox", name:"Gov. Spencer Cox", cat:"people", status:"Living",
+     role:"Governor of Utah; state leadership tied to The Point / Convergence Point innovation district."},
+    {id:"kirk", name:"Charlie Kirk / TPUSA", cat:"people", status:"Deceased — Sept 10, 2025, at the UVU event", deceased:true,
+     role:"Charlie Kirk, CEO of Turning Point USA; TPUSA organized the Sept 10, 2025 UVU event."},
+    {id:"long", name:"Chief Jeffrey Long", cat:"people", status:"Living",
+     role:"UVU Police Chief (resigned 2026); texted with Harpole/Flood about rooftop access (“I got you covered”); named in Kirk family Notice of Claim."},
+    {id:"stewart", name:"Chris Stewart", cat:"people", status:"Living", role:"Former U.S. Representative; Board Chair of 47G."},
+    {id:"cantwell", name:"Dr. Elizabeth Cantwell", cat:"people", status:"Living", role:"President of Utah State University; 47G board member."},
+    {id:"edwards", name:"Kori Ann Edwards", cat:"people", status:"Living", role:"GOEO Managing Director; 47G board member."},
+    {id:"starks", name:"Aaron Starks", cat:"people", status:"Living", role:"CEO & President of 47G."},
+    {id:"bigelow", name:"Robert Bigelow", cat:"people", status:"Living", role:"Sold Skinwalker Ranch to Brandon Fugal’s Adamantium Real Estate LLC in 2016."},
+    {id:"millner", name:"Sen. Ann Millner", cat:"people", status:"Living", role:"Utah State Senator; co-launched the Utah Aerospace & Defense Caucus with Rep. Val Peterson."},
+    {id:"schultz", name:"Speaker Mike Schultz", cat:"people", status:"Living", role:"Utah House Speaker; involved in Convergence Point / The Point leadership."},
+    {id:"47g", name:"47G", cat:"org", role:"Utah aerospace, defense, and national security organization; board includes Fugal, Stewart, Cantwell, Edwards; Starks is CEO."},
+    {id:"uvu", name:"Utah Valley University", cat:"org", role:"Host of the Sept 10, 2025 TPUSA event; site of the assassination."},
+    {id:"dfcm", name:"DFCM", cat:"gov", role:"Utah Division of Facilities Construction and Management; issued emergency order for post-event courtyard work."},
+    {id:"convergence", name:"Convergence Point", cat:"place", role:"$50M state innovation district; Fugal/Colliers involved in leasing; Moss manages budget."},
+    {id:"skinwalker", name:"Skinwalker Ranch", cat:"place", role:"Owned by Fugal via Adamantium Real Estate LLC (purchased from Bigelow 2016)."},
+    {id:"adamantium", name:"Adamantium Real Estate LLC", cat:"org", role:"Fugal’s LLC that owns Skinwalker Ranch."},
+    {id:"hardscape", name:"Hardscape Utah", cat:"org", role:"Dan Merrell’s company; performed the emergency courtyard work."},
+    {id:"goeo", name:"GOEO", cat:"gov", role:"Governor’s Office of Economic Opportunity; Moss is Commissioner."},
+    {id:"nucleus", name:"Nucleus Institute", cat:"org", role:"State-funded institute led by Jefferson Moss; runs Convergence Point."}
+  ];
+
+  var EDGES = [
+    // Security connections
+    ["harpole","integrity","Founder / lead of contracted detail"],
+    ["flood","kirk","TPUSA in-house security head"],
+    ["harpole","kirk","Contracted security lead at UVU"],
+    ["flood","harpole","Close friends; both came up through prior contractor"],
+    ["davis","kirk","Driver on Sept 10"],
+    ["cutler","kirk","Operator on the detail"],
+    ["turek","kirk","Close friend / mentor; rode in vehicle"],
+    ["harpole","long","Texted about rooftop access"],
+    ["flood","long","Coordinated with UVU PD"],
+    ["integrity","uvu","Provided private detail at the event"],
+    ["kirk","uvu","Event location Sept 10, 2025"],
+    ["kirk","long","Rooftop security assurances"],
+
+    // Broader connections (selected key ones from research web)
+    ["fugal","47g","Board member"],
+    ["fugal","uvu","Former Foundation board / $5M donor"],
+    ["fugal","convergence","Colliers exclusive office leasing"],
+    ["fugal","skinwalker","Owns via Adamantium"],
+    ["fugal","adamantium","Owns the LLC"],
+    ["danmerrell","hardscape","Owner"],
+    ["danmerrell","dfcm","Hired under emergency order"],
+    ["danmerrell","kenmerrell","Related Merrell companies"],
+    ["moss","goeo","GOEO Commissioner"],
+    ["moss","nucleus","CEO"],
+    ["moss","convergence","Manages $50M budget"],
+    ["peterson","uvu","VP Administration"],
+    ["peterson","millner","Co-launched Aerospace & Defense Caucus"],
+    ["47g","stewart","Board Chair"],
+    ["47g","cantwell","Board member"],
+    ["47g","starks","CEO"],
+    ["cox","convergence","State leadership"],
+    ["bigelow","skinwalker","Sold ranch to Fugal 2016"],
+    ["schultz","convergence","Leadership involvement"]
+  ];
+
+  var CATMETA = {
+    security:{label:"Security Team", css:"security"},
+    people:{label:"Person", css:"people"},
+    org:{label:"Organization / Company", css:"org"},
+    gov:{label:"Government / State", css:"gov"},
+    place:{label:"Place / Project", css:"place"}
+  };
+
+  var byId = {};
+  NODES.forEach(function(n){ n.deg = 0; byId[n.id] = n; });
+  EDGES.forEach(function(e){ if(byId[e[0]]) byId[e[0]].deg++; if(byId[e[1]]) byId[e[1]].deg++; });
+  NODES.forEach(function(n){ n.r = 18 + Math.min(22, n.deg * 2.2); });
+
+  var W = 1200, H = 820;
+  var seeds = {
+    harpole:[280,480], flood:[180,380], davis:[120,520], cutler:[220,580], turek:[360,560], integrity:[100,420],
+    kirk:[400,420], long:[500,300], uvu:[480,480],
+    fugal:[700,280], "47g":[820,180], convergence:[900,360], danmerrell:[600,640], moss:[780,480], cox:[900,120]
+  };
+  NODES.forEach(function(n,i){
+    var s = seeds[n.id];
+    if(s){ n.x = s[0]; n.y = s[1]; }
+    else{
+      var a = (i / NODES.length) * Math.PI * 2;
+      n.x = W/2 + Math.cos(a) * 340 + (Math.random()-0.5)*40;
+      n.y = H/2 + Math.sin(a) * 240 + (Math.random()-0.5)*40;
+    }
+    n.vx = 0; n.vy = 0;
+  });
+
+  var svg = document.getElementById("web");
+  var NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs, parent){
+    var e = document.createElementNS(NS, tag);
+    for(var k in attrs) e.setAttribute(k, attrs[k]);
+    if(parent) parent.appendChild(e);
+    return e;
+  }
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  var viewport = el("g", {}, svg);
+  var edgeLayer = el("g", {}, viewport);
+  var labelLayer = el("g", {}, viewport);
+  var nodeLayer = el("g", {}, viewport);
+
+  // Clip paths for circular images
+  var defs = el("defs", {}, svg);
+  NODES.forEach(function(n){
+    if(n.image){
+      var clip = el("clipPath", {id:"clip-"+n.id}, defs);
+      el("circle", {cx:0, cy:0, r:n.r-1}, clip);
+    }
+  });
+
+  var edgeEls = EDGES.map(function(e){
+    var line = el("line", {"class":"edge"}, edgeLayer);
+    var lab = el("text", {"class":"edge-label", "text-anchor":"middle", "style":"display:none"}, labelLayer);
+    lab.textContent = e[2];
+    return {a:byId[e[0]], b:byId[e[1]], label:e[2], line:line, lab:lab};
+  });
+
+  function initials(name){
+    var clean = name.replace(/^(Dr\.|Gov\.|Sen\.|Chief|Speaker)\s+/,"");
+    var parts = clean.split(/[\s\/]+/).filter(Boolean);
+    if(parts.length === 1) return parts[0].slice(0,2).toUpperCase();
+    return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+  }
+
+  var dragNode = null, dragMoved = false, panStart = null;
+  var nodeEls = {};
+  NODES.forEach(function(n){
+    var g = el("g", {"class":"node cat-" + n.cat, "tabindex":"0", "role":"button", "aria-label": n.name}, nodeLayer);
+    el("circle", {"class":"core", r:n.r}, g);
+    if(n.image){
+      var img = el("image", {href:n.image, x:-n.r, y:-n.r, width:n.r*2, height:n.r*2, "clip-path":"url(#clip-"+n.id+")", preserveAspectRatio:"xMidYMid slice"}, g);
+      img.addEventListener("error", function(){ this.style.display="none"; });
+    }
+    var ini = el("text", {"class":"initials", y:4, "font-size": n.r > 26 ? 15 : 12.5}, g);
+    ini.textContent = initials(n.name);
+    if(n.deceased){
+      var dm = el("text", {"class":"deceased-mark", x:n.r - 2, y:-n.r + 10, "font-size":15}, g);
+      dm.textContent = "†";
+    }
+    var lines = n.label || [n.name];
+    lines.forEach(function(txt, i){
+      var t = el("text", {y: n.r + 16 + i * 14, "font-size": 12.5}, g);
+      t.textContent = txt;
+    });
+    nodeEls[n.id] = g;
+    g.addEventListener("pointerdown", function(ev){ startNodeDrag(ev, n); });
+    g.addEventListener("click", function(ev){ if(!dragMoved){ select(n.id, false); } });
+  });
+
+  var alpha = 1;
+  function tick(){
+    for(var i = 0; i < NODES.length; i++){
+      for(var j = i + 1; j < NODES.length; j++){
+        var a = NODES[i], b = NODES[j];
+        var dx = b.x - a.x, dy = b.y - a.y;
+        var d2 = dx*dx + dy*dy || 1;
+        var d = Math.sqrt(d2);
+        var minD = a.r + b.r + 60;
+        var f = (8000 / d2) + (d < minD ? (minD - d) * 0.01 : 0);
+        var fx = dx / d * f, fy = dy / d * f;
+        a.vx -= fx; a.vy -= fy; b.vx += fx; b.vy += fy;
+      }
+    }
+    edgeEls.forEach(function(e){
+      if(!e.a || !e.b) return;
+      var dx = e.b.x - e.a.x, dy = e.b.y - e.a.y;
+      var d = Math.sqrt(dx*dx + dy*dy) || 1;
+      var rest = 180;
+      var f = (d - rest) * 0.01;
+      var fx = dx / d * f, fy = dy / d * f;
+      e.a.vx += fx; e.a.vy += fy; e.b.vx -= fx; e.b.vy -= fy;
+    });
+    NODES.forEach(function(n){
+      n.vx += (W/2 - n.x) * 0.0014;
+      n.vy += (H/2 - n.y) * 0.0014;
+      if(n !== dragNode){
+        n.vx *= 0.82; n.vy *= 0.82;
+        n.x += n.vx * alpha;
+        n.y += n.vy * alpha;
+      }
+      n.x = Math.max(50, Math.min(W - 50, n.x));
+      n.y = Math.max(50, Math.min(H - 60, n.y));
+    });
+    alpha = Math.max(0.12, alpha * 0.995);
+    render();
+    requestAnimationFrame(tick);
+  }
+  function render(){
+    edgeEls.forEach(function(e){
+      if(!e.a || !e.b) return;
+      e.line.setAttribute("x1", e.a.x); e.line.setAttribute("y1", e.a.y);
+      e.line.setAttribute("x2", e.b.x); e.line.setAttribute("y2", e.b.y);
+      e.lab.setAttribute("x", (e.a.x + e.b.x) / 2);
+      e.lab.setAttribute("y", (e.a.y + e.b.y) / 2 - 6);
+    });
+    NODES.forEach(function(n){
+      nodeEls[n.id].setAttribute("transform", "translate(" + n.x + "," + n.y + ")");
+    });
+  }
+
+  var view = {x:0, y:0, k:1};
+  function applyView(){ viewport.setAttribute("transform", "translate(" + view.x + "," + view.y + ") scale(" + view.k + ")"); }
+  function toGraph(cx, cy){
+    var rect = svg.getBoundingClientRect();
+    var sx = (cx - rect.left) / rect.width * W;
+    var sy = (cy - rect.top) / rect.height * H;
+    return {x:(sx - view.x) / view.k, y:(sy - view.y) / view.k};
+  }
+  function zoomAt(cx, cy, factor){
+    var p = toGraph(cx, cy);
+    var nk = Math.max(0.3, Math.min(3.2, view.k * factor));
+    var rect = svg.getBoundingClientRect();
+    var sx = (cx - rect.left) / rect.width * W;
+    var sy = (cy - rect.top) / rect.height * H;
+    view.x = sx - p.x * nk; view.y = sy - p.y * nk; view.k = nk;
+    applyView();
+  }
+  function fitView(){ view = {x:0, y:0, k:1}; applyView(); }
+  function centerOn(n){
+    var k = Math.max(view.k, 1.05);
+    view.k = k;
+    view.x = W/2 - n.x * k;
+    view.y = H/2 - n.y * k;
+    applyView();
+  }
+  document.getElementById("zoomIn").addEventListener("click", function(){ var r = svg.getBoundingClientRect(); zoomAt(r.left + r.width/2, r.top + r.height/2, 1.3); });
+  document.getElementById("zoomOut").addEventListener("click", function(){ var r = svg.getBoundingClientRect(); zoomAt(r.left + r.width/2, r.top + r.height/2, 1/1.3); });
+  document.getElementById("zoomFit").addEventListener("click", function(){ fitView(); clearSelection(); });
+
+  svg.addEventListener("wheel", function(ev){ ev.preventDefault(); zoomAt(ev.clientX, ev.clientY, ev.deltaY < 0 ? 1.12 : 1/1.12); }, {passive:false});
+
+  function startNodeDrag(ev, n){
+    ev.stopPropagation();
+    dragNode = n; dragMoved = false;
+    var p = toGraph(ev.clientX, ev.clientY);
+    n._offx = n.x - p.x; n._offy = n.y - p.y;
+    if(svg.setPointerCapture){ try{ svg.setPointerCapture(ev.pointerId); }catch(e){} }
+  }
+  svg.addEventListener("pointerdown", function(ev){ if(!dragNode){ panStart = {x:ev.clientX, y:ev.clientY, vx:view.x, vy:view.y}; svg.classList.add("panning"); } });
+  svg.addEventListener("pointermove", function(ev){
+    if(dragNode){
+      var p = toGraph(ev.clientX, ev.clientY);
+      dragNode.x = p.x + dragNode._offx; dragNode.y = p.y + dragNode._offy;
+      dragNode.vx = 0; dragNode.vy = 0; dragMoved = true; alpha = Math.max(alpha, 0.3);
+    } else if(panStart){
+      var rect = svg.getBoundingClientRect();
+      view.x = panStart.vx + (ev.clientX - panStart.x) / rect.width * W;
+      view.y = panStart.vy + (ev.clientY - panStart.y) / rect.height * H;
+      applyView();
+    }
+  });
+  function endDrag(){ dragNode = null; panStart = null; svg.classList.remove("panning"); setTimeout(function(){ dragMoved = false; }, 50); }
+  svg.addEventListener("pointerup", endDrag);
+  svg.addEventListener("pointercancel", endDrag);
+  svg.addEventListener("click", function(ev){ if(ev.target === svg) clearSelection(); });
+
+  var panel = document.getElementById("panel");
+  var selected = null;
+  var activeCats = {security:true, people:true, org:true, gov:true, place:true};
+
+  function neighbors(id){
+    var out = [];
+    edgeEls.forEach(function(e){
+      if(!e.a || !e.b) return;
+      if(e.a.id === id) out.push({node:e.b, label:e.label});
+      else if(e.b.id === id) out.push({node:e.a, label:e.label});
+    });
+    return out;
+  }
+  function catDot(cat){ return '<span class="dot" style="background:var(--' + CATMETA[cat].css + ')"></span>'; }
+  function escapeHtml(s){ return String(s).replace(/&/g,"&").replace(/</g,"<").replace(/>/g,">"); }
+
+  function renderOverview(){
+    var hubs = NODES.slice().sort(function(a,b){ return b.deg - a.deg; }).slice(0, 8);
+    var html = '<span class="ptag">The Web</span><h2>' + NODES.length + ' entries · ' + EDGES.length + ' connections</h2>' +
+      '<p class="role">Core UVU security team on the left; broader Utah research connections (47G, Convergence Point, Merrells, Skinwalker, etc.) on the right. Tap any node for its file.</p>' +
+      '<h3>Most connected</h3><ul class="hub-list">';
+    hubs.forEach(function(n){
+      html += '<li><button data-node="' + n.id + '"><span class="n">' + catDot(n.cat) + escapeHtml(n.name) + '</span><span class="c">' + n.deg + ' links</span></button></li>';
+    });
+    html += '</ul>';
+    panel.innerHTML = html;
+    bindPanelButtons();
+  }
+
+  function renderPanel(n){
+    var conns = neighbors(n.id);
+    var html = '<span class="ptag">' + catDot(n.cat) + CATMETA[n.cat].label + '</span><h2>' + escapeHtml(n.name) + '</h2>';
+    if(n.status) html += '<div class="status-line">Status: ' + escapeHtml(n.status) + '</div>';
+    html += '<p class="role">' + escapeHtml(n.role) + '</p>';
+    html += '<h3>Connections (' + conns.length + ')</h3>';
+    if(conns.length){
+      html += '<ul class="conn-list">';
+      conns.forEach(function(c){
+        html += '<li><button data-node="' + c.node.id + '">' + catDot(c.node.cat) +
+          '<span><span class="cname">' + escapeHtml(c.node.name) + '</span><span class="clabel">' + escapeHtml(c.label) + '</span></span></button></li>';
+      });
+      html += '</ul>';
+    } else {
+      html += '<p class="empty-note">No additional documented connections in this view.</p>';
+    }
+    html += '<button class="clear-btn" id="clearSel">← Back to the whole web</button>';
+    panel.innerHTML = html;
+    bindPanelButtons();
+    document.getElementById("clearSel").addEventListener("click", clearSelection);
+  }
+
+  function bindPanelButtons(){
+    var btns = panel.querySelectorAll("button[data-node]");
+    for(var i = 0; i < btns.length; i++){
+      btns[i].addEventListener("click", function(){ select(this.getAttribute("data-node"), true); });
+    }
+  }
+
+  function select(id, center){
+    selected = id;
+    var n = byId[id];
+    var near = {}; near[id] = true;
+    neighbors(id).forEach(function(c){ near[c.node.id] = true; });
+    NODES.forEach(function(x){
+      nodeEls[x.id].classList.toggle("selected", x.id === id);
+      nodeEls[x.id].classList.toggle("dim", !near[x.id]);
+    });
+    edgeEls.forEach(function(e){
+      if(!e.a || !e.b) return;
+      var on = e.a.id === id || e.b.id === id;
+      e.line.classList.toggle("hl", on);
+      e.line.classList.toggle("dim", !on);
+      e.lab.style.display = on ? "" : "none";
+    });
+    renderPanel(n);
+    if(center) centerOn(n);
+    if(window.innerWidth <= 920){ panel.scrollIntoView({behavior:"smooth", block:"nearest"}); }
+  }
+
+  function clearSelection(){
+    selected = null;
+    NODES.forEach(function(x){ nodeEls[x.id].classList.remove("selected"); nodeEls[x.id].classList.remove("dim"); });
+    edgeEls.forEach(function(e){ e.line.classList.remove("hl"); e.line.classList.remove("dim"); e.lab.style.display = "none"; });
+    renderOverview();
+  }
+
+  var chips = document.querySelectorAll(".chip");
+  chips.forEach(function(chip){
+    chip.addEventListener("click", function(){
+      var cat = chip.getAttribute("data-cat");
+      activeCats[cat] = !activeCats[cat];
+      chip.setAttribute("aria-pressed", activeCats[cat] ? "true" : "false");
+      applyFilters();
+    });
+  });
+  var searchTerm = "";
+  function applyFilters(){
+    var visible = 0;
+    NODES.forEach(function(n){
+      var show = activeCats[n.cat] && (!searchTerm || n.name.toLowerCase().indexOf(searchTerm) > -1);
+      nodeEls[n.id].classList.toggle("filtered-out", !show);
+      if(show) visible++;
+    });
+    edgeEls.forEach(function(e){
+      if(!e.a || !e.b) return;
+      var show = activeCats[e.a.cat] && activeCats[e.b.cat] &&
+        (!searchTerm || e.a.name.toLowerCase().indexOf(searchTerm) > -1 || e.b.name.toLowerCase().indexOf(searchTerm) > -1);
+      e.line.style.display = show ? "" : "none";
+    });
+    document.getElementById("countBadge").textContent = visible + " of " + NODES.length + " shown";
+  }
+
+  var searchInput = document.getElementById("search");
+  var searchResults = document.getElementById("searchResults");
+  searchInput.addEventListener("input", function(){
+    searchTerm = searchInput.value.trim().toLowerCase();
+    if(!searchTerm){ searchResults.classList.remove("open"); searchResults.innerHTML = ""; applyFilters(); return; }
+    var matches = NODES.filter(function(n){ return n.name.toLowerCase().indexOf(searchTerm) > -1; }).slice(0, 8);
+    searchResults.innerHTML = matches.map(function(n){
+      return '<button data-id="' + n.id + '">' + catDot(n.cat) + escapeHtml(n.name) + '</button>';
+    }).join("") || '<button disabled style="cursor:default">No matches</button>';
+    var btns = searchResults.querySelectorAll("button[data-id]");
+    for(var i = 0; i < btns.length; i++){
+      btns[i].addEventListener("click", function(){
+        var id = this.getAttribute("data-id");
+        searchInput.value = ""; searchTerm = "";
+        searchResults.classList.remove("open"); applyFilters();
+        select(id, true);
+      });
+    }
+    searchResults.classList.add("open");
+    applyFilters();
+  });
+  document.addEventListener("click", function(ev){
+    if(!searchResults.contains(ev.target) && ev.target !== searchInput) searchResults.classList.remove("open");
+  });
+
+  fitView();
+  renderOverview();
+  applyFilters();
+  tick();
+})();
+</script>
+</body>
+</html>
